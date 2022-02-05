@@ -9,9 +9,11 @@ require('dotenv').config();
 
 const web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/602406e9ca2a43ffb7124bf1f619fea4'));
 
+// web3.eth.accounts.wallet.add(PRIVATE_KEY);
 const PRIVATE_KEY = Buffer.from('e5e5aa6562d90f542d5d4f24244b228cc365797ed5c1a4a8eea5b623231c6bb9', 'hex')
 const accounts = web3.eth.accounts.privateKeyToAccount('e5e5aa6562d90f542d5d4f24244b228cc365797ed5c1a4a8eea5b623231c6bb9');
 // const balance = web3.eth.getBalance(accounts.address);
+
 console.log(accounts.address);
 
 web3.eth.getTransactionCount(accounts.address, (err, txCount) => {
@@ -19,6 +21,7 @@ web3.eth.getTransactionCount(accounts.address, (err, txCount) => {
         nonce: web3.utils.toHex(txCount),
         // from: accounts.address,
         to: '0x9888375f4663891770DaaaF9286d97d44FeFC82E',
+        value: web3.utils.toHex(web3.utils.toWei('1', 'ether')),
         gasLimit: web3.utils.toHex(21000),
         gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
 }
@@ -29,25 +32,12 @@ tx.sign(PRIVATE_KEY)
 const serializedTx = tx.serialize()
 const raw = '0x' + serializedTx.toString('hex')
 
-// console.log('tx :', tx)
-// console.log('serializedTx :', serializedTx)
-// console.log('raw :', raw)
-
 web3.eth.sendSignedTransaction(raw, (err, txHash) => {
     if(err) {console.log(err)}
     console.log('txHash:', txHash)
 })
 
 })
-
-
-
-
-// web3.eth.accounts.wallet.add(PRIVATE_KEY);
-
-
-
-
 
 // web3.eth.sendTransaction({from: accounts.address, to: '0x8f8b5b9b8f8b5b9b8f8b5b9b8f8b5b9b8f8b5b9b', value: web3.utils.toWei('0.1', 'ether')})
 
